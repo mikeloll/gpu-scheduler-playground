@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { modelStatus, type ModelStatus } from '../sim/selectors';
 import { GPUS_PER_NODE, type Action, type Model, type SimState } from '../sim/types';
 import { modelColor } from '../colors';
+import { useTourUi } from '../tour/TourContext';
 
 const PRESETS = [
   { name: 'chat-large', gpus: 8 },
@@ -18,15 +19,17 @@ interface Props {
 }
 
 export function ModelPanel({ state, dispatch }: Props) {
+  // The tour deploys models itself, so it hides the deploy form.
+  const inTour = useTourUi().active;
   return (
     <section className="panel" aria-label="Models">
       <div className="section-head">
         <h2>Models</h2>
-        <span className="hint">Pick a predefined model or create your own.</span>
+        {!inTour && <span className="hint">Pick a predefined model or create your own.</span>}
       </div>
-      <DeployForm dispatch={dispatch} />
+      {!inTour && <DeployForm dispatch={dispatch} />}
       {state.models.length === 0 ? (
-        <p className="empty">No models yet. Deploy one above.</p>
+        <p className="empty">{inTour ? 'No models yet.' : 'No models yet. Deploy one above.'}</p>
       ) : (
         <ul className="model-list">
           {sortProblemsFirst(state).map(({ model, status }) => (
@@ -130,8 +133,13 @@ function ModelItem({ model, status, state, dispatch }: { model: Model; status: M
       break;
   }
 
+  const tour = useTourUi();
+  const scale = tour.control(`scale:${model.name}`);
+  const upgrade = tour.control(`upgrade:${model.name}`);
+  const remove = tour.control(`delete:${model.name}`);
+
   return (
-    <li className={`model ${status.kind}`} aria-label={model.name}>
+    <li className={`model ${status.kind} ${tour.highlight(`model:${model.name}`)}`} aria-label={model.name}>
       <div className="model-top">
         <span className="swatch" style={{ background: modelColor(model.color) }} />
         <span className="model-name">{model.name}</span>
@@ -146,7 +154,7 @@ function ModelItem({ model, status, state, dispatch }: { model: Model; status: M
           <button
             className="btn small"
             onClick={() => dispatch({ type: 'setReplicas', modelId: model.id, replicas: model.replicas - 1 })}
-            disabled={model.replicas <= 0}
+            disabled={scale.disabled || model.replicas <= 0}
             aria-label="Remove one instance"
           >
             −
@@ -155,19 +163,24 @@ function ModelItem({ model, status, state, dispatch }: { model: Model; status: M
           <button
             className="btn small"
             onClick={() => dispatch({ type: 'setReplicas', modelId: model.id, replicas: model.replicas + 1 })}
+            disabled={scale.disabled}
             aria-label="Add one instance"
           >
             +
           </button>
         </div>
         <button
-          className="btn small"
+          className={`btn small ${upgrade.className}`}
           onClick={() => dispatch({ type: 'upgrade', modelId: model.id })}
-          disabled={status.kind === 'upgrading' || (status.kind === 'stuck' && status.upgrading)}
+          disabled={upgrade.disabled || status.kind === 'upgrading' || (status.kind === 'stuck' && status.upgrading)}
         >
           Upgrade
         </button>
-        <button className="btn small ghost" onClick={() => dispatch({ type: 'delete', modelId: model.id })}>
+        <button
+          className="btn small ghost"
+          onClick={() => dispatch({ type: 'delete', modelId: model.id })}
+          disabled={remove.disabled}
+        >
           Delete
         </button>
       </div>

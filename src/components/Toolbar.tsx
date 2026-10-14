@@ -1,4 +1,5 @@
 import type { Strategy } from '../sim/types';
+import { useTourUi } from '../tour/TourContext';
 
 const STRATEGY_HELP: Record<Strategy, string> = {
   binpack: 'Binpack: put each instance on the fullest node that still has room.',
@@ -13,25 +14,31 @@ interface Props {
   onPlayPause: () => void;
   onStep: () => void;
   onSpeed: (v: number) => void;
-  onReset: () => void;
+  /** Not shown in the tour, which has its own Restart. */
+  onReset?: () => void;
 }
 
 export function Toolbar(p: Props) {
+  const tour = useTourUi();
   return (
     <div className="toolbar">
       <div className="toolbar-group">
-        <div className="segmented" role="radiogroup" aria-label="Placement strategy">
-          {(['binpack', 'spread'] as const).map((s) => (
-            <button
-              key={s}
-              role="radio"
-              aria-checked={p.strategy === s}
-              className={p.strategy === s ? 'active' : ''}
-              onClick={() => p.onStrategy(s)}
-            >
-              {s === 'binpack' ? 'Binpack' : 'Spread'}
-            </button>
-          ))}
+        <div className={`segmented ${tour.highlight('strategy')}`} role="radiogroup" aria-label="Placement strategy">
+          {(['binpack', 'spread'] as const).map((s) => {
+            const ctrl = tour.control(`strategy:${s}`);
+            return (
+              <button
+                key={s}
+                role="radio"
+                aria-checked={p.strategy === s}
+                className={`${p.strategy === s ? 'active' : ''} ${ctrl.className}`}
+                disabled={ctrl.disabled}
+                onClick={() => p.onStrategy(s)}
+              >
+                {s === 'binpack' ? 'Binpack' : 'Spread'}
+              </button>
+            );
+          })}
         </div>
         <span className="strategy-help">{STRATEGY_HELP[p.strategy]}</span>
       </div>
@@ -55,9 +62,11 @@ export function Toolbar(p: Props) {
             style={{ '--fill': `${p.speed}%` } as React.CSSProperties}
           />
         </label>
-        <button className="btn" onClick={p.onReset} title="Start over with the starting models">
-          Reset
-        </button>
+        {p.onReset && (
+          <button className="btn" onClick={p.onReset} title="Start over with the starting models">
+            Reset
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 # Guided demo mode — lesson outline (parked)
 
-Status: **not started**. We build the interactive mode first, then design these
+Status: **built**. The approved frame-by-frame script is `docs/guided-tour-script.md`; the code is in `src/tour/`. This file is the original outline.
+
+Original status: not started. We build the interactive mode first, then design these
 lessons together. Style: a mix of narrated steps (the app performs actions, user
 clicks Next) and hands-on tasks ("now take node-3 down and see what happens").
 Lessons stop at explaining the problem — no remedies section.

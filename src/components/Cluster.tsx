@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { chooseNode, usedGpus } from '../sim/engine';
 import { GPUS_PER_NODE, type Action, type ClusterNode, type Instance, type SimState } from '../sim/types';
 import { modelColor } from '../colors';
+import { useTourUi } from '../tour/TourContext';
 
 interface Props {
   state: SimState;
@@ -9,9 +10,10 @@ interface Props {
 }
 
 export function Cluster({ state, dispatch }: Props) {
+  const tour = useTourUi();
   const waiting = state.instances.filter((i) => i.nodeId === null);
   return (
-    <section className="cluster" aria-label="Cluster">
+    <section className={`cluster ${tour.highlight('cluster')}`} aria-label="Cluster">
       <div className="section-head">
         <h2>Cluster</h2>
         <span className="hint">Each node has {GPUS_PER_NODE} GPUs. Each block is one model instance.</span>
@@ -22,7 +24,7 @@ export function Cluster({ state, dispatch }: Props) {
         ))}
       </div>
 
-      <div className="waiting" role="region" aria-label="Waiting for a node">
+      <div className={`waiting ${tour.highlight('waiting')}`} role="region" aria-label="Waiting for a node">
         <div className="section-head">
           <h3>Waiting for a node</h3>
           <span className="hint">
@@ -52,8 +54,14 @@ export function Cluster({ state, dispatch }: Props) {
 function NodeRow({ node, state, dispatch }: { node: ClusterNode } & Props) {
   const here = state.instances.filter((i) => i.nodeId === node.id);
   const used = usedGpus(state, node.id);
+  const tour = useTourUi();
+  const toggle = tour.control(`node-toggle:${node.id}`);
   return (
-    <div className={`node ${node.up ? '' : 'down'}`} role="group" aria-label={node.name}>
+    <div
+      className={`node ${node.up ? '' : 'down'} ${tour.highlight(`node:${node.id}`)}`}
+      role="group"
+      aria-label={node.name}
+    >
       <div className="node-head">
         <span className="node-name">{node.name}</span>
         <span className="node-usage">{node.up ? `${used}/${GPUS_PER_NODE} GPUs used` : 'Down'}</span>
@@ -72,7 +80,8 @@ function NodeRow({ node, state, dispatch }: { node: ClusterNode } & Props) {
 
       <div className="node-side">
         <button
-          className={`btn small ${node.up ? 'danger' : ''}`}
+          className={`btn small ${node.up ? 'danger' : ''} ${toggle.className}`}
+          disabled={toggle.disabled}
           onClick={() => dispatch({ type: 'setNodeUp', nodeId: node.id, up: !node.up })}
         >
           {node.up ? 'Take down' : 'Bring up'}
@@ -93,6 +102,7 @@ function InstanceBlock({
   stuck?: boolean;
   inTray?: boolean;
 }) {
+  const tour = useTourUi();
   const model = state.models.find((m) => m.id === inst.modelId);
   if (!model) return null;
   const outdated = inst.version < model.version;
@@ -102,7 +112,7 @@ function InstanceBlock({
   return (
     <motion.div
       layoutId={inst.id}
-      className={`instance ${outdated ? 'outdated' : ''} ${stuck ? 'stuck' : ''}`}
+      className={`instance ${outdated ? 'outdated' : ''} ${stuck ? 'stuck' : ''} ${tour.highlight(`instances:${model.name}`)}`}
       style={{
         background: modelColor(model.color),
         ...(inTray

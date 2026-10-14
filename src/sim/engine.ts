@@ -31,9 +31,18 @@ export const STARTER_MODELS = [
 export function starterState(strategy: Strategy = 'binpack'): SimState {
   let s = initialState(strategy);
   for (const m of STARTER_MODELS) s = reducer(s, { type: 'deploy', ...m });
-  for (let next = step(s); next !== s; next = step(s)) s = next;
-  return { ...s, tick: 0, log: [] };
+  return { ...settle(s), tick: 0, log: [] };
 }
+
+/** Run the simulation until nothing more can happen (everything placed, or stuck). */
+export function settle(state: SimState): SimState {
+  let s = state;
+  for (let next = step(s); next !== s; next = step(s)) s = next;
+  return s;
+}
+
+/** True when another step would change nothing. */
+export const isSettled = (state: SimState) => step(state) === state;
 
 // ---------- queries ----------
 

@@ -7,6 +7,8 @@
   --muted: #5f6b7c;
   --accent: #2f5fd0;
   --accent-text: #ffffff;
+  --accent-soft: rgb(47 95 208 / 0.18);
+  --accent-pulse: rgb(47 95 208 / 0.55);
   --warn: #b45309;
   --warn-bg: #fff6e8;
   --danger: #c0392b;
@@ -35,6 +37,8 @@
     --text: #e6e9ef;
     --muted: #97a1b2;
     --accent: #5b86ea;
+    --accent-soft: rgb(91 134 234 / 0.22);
+    --accent-pulse: rgb(91 134 234 / 0.6);
     --warn: #f0a44b;
     --warn-bg: #2d2416;
     --danger: #ef6b5e;
@@ -154,7 +158,7 @@ h3 { font-size: 13px; }
 }
 .instance.stuck { outline: 2px dashed var(--danger); outline-offset: 2px; }
 
-.waiting { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border); }
+.waiting { margin: 18px -8px 0; padding: 14px 8px 8px; border-top: 1px dashed var(--border); border-radius: 6px; }
 .waiting-tray { display: flex; flex-wrap: wrap; gap: 10px var(--gap); min-height: 44px; padding: 2px; }
 
 /* ---------- models panel ---------- */
@@ -195,6 +199,66 @@ h3 { font-size: 13px; }
 .log { margin: 0; padding: 0; list-style: none; max-height: 260px; overflow-y: auto; font-size: 12px; }
 .log li { padding: 4px 0; border-bottom: 1px solid var(--border); color: var(--muted); }
 .log li:first-child { color: var(--text); }
+
+/* ---------- mode tabs ---------- */
+
+.mode-tabs { display: flex; gap: 4px; margin-top: 14px; border-bottom: 1px solid var(--border); }
+.mode-tabs button {
+  font: inherit; color: var(--muted); background: none; border: none; cursor: pointer;
+  padding: 6px 12px; margin-bottom: -1px; border-bottom: 2px solid transparent;
+}
+.mode-tabs button:hover { color: var(--text); }
+.mode-tabs button.active { color: var(--text); font-weight: 600; border-bottom-color: var(--accent); }
+
+/* ---------- guided tour ---------- */
+
+.tour-panel { border-color: var(--accent); }
+.tour-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; }
+.tour-progress { height: 3px; background: var(--slot-free); border-radius: 2px; margin: 6px 0 12px; overflow: hidden; }
+.tour-progress div { height: 100%; background: var(--accent); transition: width 0.3s; }
+.tour-title { font-size: 17px; margin-bottom: 6px; }
+.tour-text { font-size: 14px; line-height: 1.5; }
+.tour-text p { margin: 0 0 10px; }
+.tour-text ul { margin: 0 0 10px; padding-left: 18px; }
+.tour-text li { margin-bottom: 6px; }
+.tour-status { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.tour-status.your-turn { color: var(--accent); font-weight: 600; }
+.tour-nav { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 14px; }
+.tour-end { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.tour-end .tour-nav { margin-top: 0; }
+
+/* Something the current frame points at: a calm, static ring. */
+.tour-highlight { box-shadow: 0 0 0 2px var(--accent), 0 0 0 6px var(--accent-soft); }
+.instance.tour-highlight { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+.instance.stuck.tour-highlight { outline-offset: 6px; }
+/* Model entries live in a scrolling list that would clip an outside ring. */
+.model.tour-highlight { box-shadow: inset 0 0 0 2px var(--accent); border-radius: 6px; padding-left: 8px; padding-right: 8px; }
+
+/* The one control the user should use: a slow pulse and a "Click here" tag. */
+.tour-target {
+  position: relative; z-index: 2;
+  border-color: var(--accent) !important; color: var(--accent) !important;
+  animation: tour-pulse 1.8s ease-out infinite;
+}
+.tour-target::after {
+  content: 'Click here';
+  position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%);
+  background: var(--accent); color: var(--accent-text);
+  font-size: 11px; font-weight: 600; line-height: 1; padding: 4px 8px; border-radius: 4px;
+  white-space: nowrap; pointer-events: none;
+}
+/* The strategy toggle sits right under the mode tabs, so its tag goes below it. */
+.segmented .tour-target::after { bottom: auto; top: calc(100% + 8px); }
+/* Inside the scrolling model list a tag above the button would be clipped, so put it to the right. */
+.model-list .tour-target::after { left: calc(100% + 8px); bottom: auto; top: 50%; transform: translateY(-50%); }
+@keyframes tour-pulse {
+  0% { box-shadow: 0 0 0 0 var(--accent-pulse); }
+  70% { box-shadow: 0 0 0 10px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tour-target { animation: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+}
 
 /* ---------- narrow screens ---------- */
 
