@@ -50,4 +50,5 @@ export type Action =
   | { type: 'setNodeUp'; nodeId: string; up: boolean }
   | { type: 'setStrategy'; strategy: Strategy }
   | { type: 'reset' }
+  | { type: 'clearLog' }
   | { type: 'tick' };

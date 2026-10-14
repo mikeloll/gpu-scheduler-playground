@@ -36,7 +36,7 @@ export function Toolbar(p: Props) {
         <span className="strategy-help">{STRATEGY_HELP[p.strategy]}</span>
       </div>
 
-      <div className="toolbar-group">
+      <div className="toolbar-group controls">
         <button className="icon-btn" onClick={p.onPlayPause} title={p.playing ? 'Pause' : 'Play'}>
           {p.playing ? <PauseIcon /> : <PlayIcon />}
         </button>

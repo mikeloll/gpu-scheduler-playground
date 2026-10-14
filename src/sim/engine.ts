@@ -155,6 +155,9 @@ export function reducer(state: SimState, action: Action): SimState {
     case 'reset':
       return initialState(state.strategy);
 
+    case 'clearLog':
+      return { ...state, log: [] };
+
     case 'tick':
       return step(state);
   }

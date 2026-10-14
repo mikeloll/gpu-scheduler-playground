@@ -53,17 +53,14 @@ h3 { font-size: 13px; }
 
 .app { max-width: 1320px; margin: 0 auto; padding: 20px 24px 40px; }
 
-.app-header {
-  display: flex; flex-wrap: wrap; gap: 16px;
-  justify-content: space-between; align-items: flex-start;
-  margin-bottom: 16px;
-}
+.app-header { margin-bottom: 16px; }
 .subtitle { margin: 4px 0 0; color: var(--muted); }
 
 /* ---------- controls ---------- */
 
-.toolbar { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
-.toolbar-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; margin-top: 14px; }
+.toolbar-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.toolbar-group.controls { margin-left: auto; }
 .strategy-help { color: var(--muted); font-size: 13px; }
 
 .btn, .icon-btn, .chip, .segmented button {
@@ -112,7 +109,7 @@ h3 { font-size: 13px; }
 
 /* ---------- layout ---------- */
 
-.layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
+.layout { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 16px; align-items: start; }
 .cluster, .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
 .sidebar { display: flex; flex-direction: column; gap: 16px; }
 .section-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin-bottom: 10px; }
@@ -129,8 +126,6 @@ h3 { font-size: 13px; }
 .node-name { font-weight: 600; display: block; }
 .node-usage { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .node-side { display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
-.blast { color: var(--muted); font-size: 12px; text-align: right; }
-.blast.high { color: var(--warn); font-weight: 600; }
 
 .slots { display: grid; grid-template-columns: repeat(8, var(--cell)); gap: var(--gap); height: 40px; }
 .slot-free { background: var(--slot-free); border-radius: 5px; }
@@ -164,6 +159,8 @@ h3 { font-size: 13px; }
 /* ---------- models panel ---------- */
 
 .panel h2 { margin-bottom: 10px; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.panel-head h2 { margin: 0; }
 .deploy { display: flex; flex-direction: column; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
 .presets { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { padding: 2px 8px; font-size: 12px; border-radius: 999px; color: var(--muted); }
@@ -176,7 +173,8 @@ h3 { font-size: 13px; }
 }
 .field input[type='number'] { width: 64px; }
 
-.model-list { list-style: none; margin: 0; padding: 0; }
+/* Roughly four models tall; longer lists scroll so the log stays on screen. */
+.model-list { list-style: none; margin: 0; padding: 0 6px 0 0; max-height: 380px; overflow-y: auto; }
 .model { padding: 10px 0; border-bottom: 1px solid var(--border); }
 .model:last-child { border-bottom: none; padding-bottom: 0; }
 .model-top { display: flex; gap: 8px; align-items: center; }
@@ -209,5 +207,4 @@ h3 { font-size: 13px; }
   .node { grid-template-columns: 1fr; gap: 6px; }
   .node-side { justify-content: space-between; }
   .instance-name { display: none; }
-  .toolbar { align-items: flex-start; }
 }

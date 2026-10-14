@@ -29,12 +29,10 @@ export default function App() {
     <MotionConfig transition={{ duration, ease: 'easeInOut' }}>
       <div className="app">
         <header className="app-header">
-          <div>
-            <h1>GPU Scheduler Playground</h1>
-            <p className="subtitle">
-              Deploy models onto a {state.nodes.length}-node cluster and watch where they land.
-            </p>
-          </div>
+          <h1>GPU Scheduler Playground</h1>
+          <p className="subtitle">
+            Deploy models onto a {state.nodes.length}-node cluster and watch where they land.
+          </p>
           <Toolbar
             strategy={state.strategy}
             playing={playing}
@@ -50,13 +48,13 @@ export default function App() {
         <Metrics state={state} />
 
         <main className="layout">
+          <aside className="sidebar">
+            <ModelPanel state={state} dispatch={dispatch} />
+            <EventLog log={state.log} onClear={() => dispatch({ type: 'clearLog' })} />
+          </aside>
           <LayoutGroup>
             <Cluster state={state} dispatch={dispatch} />
           </LayoutGroup>
-          <aside className="sidebar">
-            <ModelPanel state={state} dispatch={dispatch} />
-            <EventLog log={state.log} />
-          </aside>
         </main>
       </div>
     </MotionConfig>

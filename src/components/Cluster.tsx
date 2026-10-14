@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { chooseNode, usedGpus } from '../sim/engine';
-import { blastRadius } from '../sim/selectors';
 import { GPUS_PER_NODE, type Action, type ClusterNode, type Instance, type SimState } from '../sim/types';
 import { modelColor } from '../colors';
 
@@ -53,7 +52,6 @@ export function Cluster({ state, dispatch }: Props) {
 function NodeRow({ node, state, dispatch }: { node: ClusterNode } & Props) {
   const here = state.instances.filter((i) => i.nodeId === node.id);
   const used = usedGpus(state, node.id);
-  const blast = blastRadius(state, node.id);
   return (
     <div className={`node ${node.up ? '' : 'down'}`}>
       <div className="node-head">
@@ -73,13 +71,6 @@ function NodeRow({ node, state, dispatch }: { node: ClusterNode } & Props) {
       </div>
 
       <div className="node-side">
-        <span className={`blast ${blast.models >= 3 ? 'high' : ''}`}>
-          {node.up
-            ? blast.models
-              ? `If down: ${blast.models} model${blast.models === 1 ? '' : 's'} hit`
-              : 'If down: nothing hit'
-            : ''}
-        </span>
         <button
           className={`btn small ${node.up ? 'danger' : ''}`}
           onClick={() => dispatch({ type: 'setNodeUp', nodeId: node.id, up: !node.up })}
