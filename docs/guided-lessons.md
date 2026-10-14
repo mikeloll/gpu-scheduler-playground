@@ -17,6 +17,10 @@ Vocabulary: models, instances, nodes, GPUs. No Kubernetes terms.
 6. **The stalled upgrade** — upgrade a 4-GPU model on a fragmented cluster.
    The new instance must start before the old one is retired, there's no single
    node with 4 free GPUs, so the upgrade sits stuck.
+   - Key beat: v1 is **not** taken down until v2 is running. That ordering
+     keeps the model serving during the upgrade, but it's also why it stalls:
+     v1's GPUs are never freed for v2 to use. Make this explicit; people
+     often assume the old instance goes first.
 
 Ideas for later:
 - Side-by-side binpack vs spread running the same script.
