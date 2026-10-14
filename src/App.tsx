@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from 'react';
 import { LayoutGroup, MotionConfig } from 'motion/react';
-import { initialState, reducer } from './sim/engine';
+import { reducer, starterState } from './sim/engine';
 import { Toolbar } from './components/Toolbar';
 import { Metrics } from './components/Metrics';
 import { Cluster } from './components/Cluster';
@@ -11,7 +11,7 @@ import { EventLog } from './components/EventLog';
 const tickInterval = (speed: number) => Math.round(10000 * Math.pow(0.02, speed / 100));
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, undefined, () => initialState('binpack'));
+  const [state, dispatch] = useReducer(reducer, undefined, () => starterState('binpack'));
   const [playing, setPlaying] = useState(true);
   const [speed, setSpeed] = useState(50); // midpoint: ~1.4s per step
   const interval = tickInterval(speed);

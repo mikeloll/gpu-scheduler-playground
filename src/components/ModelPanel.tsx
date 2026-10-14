@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { modelStatus } from '../sim/selectors';
+import { modelStatus, type ModelStatus } from '../sim/selectors';
 import { GPUS_PER_NODE, type Action, type Model, type SimState } from '../sim/types';
 import { modelColor } from '../colors';
 
@@ -29,8 +29,8 @@ export function ModelPanel({ state, dispatch }: Props) {
         <p className="empty">No models yet. Deploy one above.</p>
       ) : (
         <ul className="model-list">
-          {state.models.map((m) => (
-            <ModelItem key={m.id} model={m} state={state} dispatch={dispatch} />
+          {sortProblemsFirst(state).map(({ model, status }) => (
+            <ModelItem key={model.id} model={model} status={status} state={state} dispatch={dispatch} />
           ))}
         </ul>
       )}
@@ -100,11 +100,17 @@ function DeployForm({ dispatch }: { dispatch: Props['dispatch'] }) {
   );
 }
 
-function ModelItem({ model, state, dispatch }: { model: Model } & Props) {
+/** Models that can't place instances (stuck or stalled upgrade) float to the top; otherwise deploy order. */
+function sortProblemsFirst(state: SimState) {
+  return state.models
+    .map((model) => ({ model, status: modelStatus(state, model) }))
+    .sort((a, b) => Number(b.status.kind === 'stuck') - Number(a.status.kind === 'stuck'));
+}
+
+function ModelItem({ model, status, state, dispatch }: { model: Model; status: ModelStatus } & Props) {
   const mine = state.instances.filter((i) => i.modelId === model.id);
   const running = mine.filter((i) => i.nodeId !== null);
   const current = running.filter((i) => i.version === model.version).length;
-  const status = modelStatus(state, model);
 
   let statusText: string;
   switch (status.kind) {

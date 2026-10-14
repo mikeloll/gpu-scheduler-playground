@@ -20,6 +20,21 @@ export function initialState(strategy: Strategy = 'binpack'): SimState {
   return { strategy, nodes, models: [], instances: [], nextId: 1, tick: 0, log: [] };
 }
 
+/** Models already running when the app loads, so the cluster isn't empty. */
+export const STARTER_MODELS = [
+  { name: 'chat-medium', gpus: 4, replicas: 2 },
+  { name: 'code-assist', gpus: 2, replicas: 2 },
+  { name: 'embeddings', gpus: 1, replicas: 1 },
+];
+
+/** The cluster with the starter models already placed and no events logged. */
+export function starterState(strategy: Strategy = 'binpack'): SimState {
+  let s = initialState(strategy);
+  for (const m of STARTER_MODELS) s = reducer(s, { type: 'deploy', ...m });
+  for (let next = step(s); next !== s; next = step(s)) s = next;
+  return { ...s, tick: 0, log: [] };
+}
+
 // ---------- queries ----------
 
 export function usedGpus(state: SimState, nodeId: string): number {
@@ -153,7 +168,7 @@ export function reducer(state: SimState, action: Action): SimState {
     }
 
     case 'reset':
-      return initialState(state.strategy);
+      return starterState(state.strategy);
 
     case 'clearLog':
       return { ...state, log: [] };

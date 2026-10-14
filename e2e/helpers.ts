@@ -6,6 +6,14 @@ export async function openApp(page: Page) {
   await page.getByRole('slider', { name: 'Simulation speed' }).fill('100');
 }
 
+/** Delete the starter models through the UI so a test can begin from an empty cluster. */
+export async function clearModels(page: Page) {
+  const deleteButtons = page.getByRole('region', { name: 'Models' }).getByRole('button', { name: 'Delete' });
+  while ((await deleteButtons.count()) > 0) await deleteButtons.first().click();
+  await expect(page.getByText('No models yet.')).toBeVisible();
+  await page.getByRole('region', { name: 'What happened' }).getByRole('button', { name: 'Clear' }).click();
+}
+
 export async function deploy(page: Page, name: string, gpus: number, instances: number) {
   await page.getByPlaceholder('my-model').fill(name);
   await page.getByLabel('GPUs each').selectOption(String(gpus));

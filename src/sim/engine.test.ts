@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { initialState, reducer, step } from './engine';
+import { STARTER_MODELS, initialState, reducer, starterState, step } from './engine';
 import { clusterMetrics, modelStatus } from './selectors';
 import { NODE_COUNT, type Action, type SimState } from './types';
 
@@ -113,15 +113,26 @@ describe('model colors', () => {
   });
 });
 
+describe('starting cluster', () => {
+  it('has the starter models placed and an empty event log', () => {
+    const s = starterState();
+    expect(s.models.map((m) => m.name)).toEqual(STARTER_MODELS.map((m) => m.name));
+    expect(s.instances).toHaveLength(STARTER_MODELS.reduce((n, m) => n + m.replicas, 0));
+    expect(s.instances.every((i) => i.nodeId)).toBe(true);
+    expect(s.log).toEqual([]);
+  });
+});
+
 describe('reset', () => {
-  it('clears models and brings every node back but keeps the strategy', () => {
+  it('returns to the starting cluster, brings every node back, and keeps the strategy', () => {
     let s = run(
       initialState('spread'),
       { type: 'deploy', name: 'a', gpus: 2, replicas: 3 },
       { type: 'setNodeUp', nodeId: 'node-2', up: false },
       { type: 'reset' },
     );
-    expect(s.models).toEqual([]);
+    expect(s.models).toEqual(starterState('spread').models);
+    expect(s.instances).toEqual(starterState('spread').instances);
     expect(s.nodes.every((n) => n.up)).toBe(true);
     expect(s.strategy).toBe('spread');
   });

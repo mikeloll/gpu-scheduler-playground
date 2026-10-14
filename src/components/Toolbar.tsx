@@ -55,7 +55,7 @@ export function Toolbar(p: Props) {
             style={{ '--fill': `${p.speed}%` } as React.CSSProperties}
           />
         </label>
-        <button className="btn" onClick={p.onReset} title="Clear the cluster and start over">
+        <button className="btn" onClick={p.onReset} title="Start over with the starting models">
           Reset
         </button>
       </div>
