@@ -87,6 +87,8 @@ src/
 e2e/                    Playwright browser tests and helpers
 docs/guided-tour-script.md  The approved tour script that frames.ts follows
 docs/guided-lessons.md      Original lesson outline
+docs/decisions.md           What v1 leaves out, its trade-offs, and simulation simplifications
+docs/v2-ideas.md            Ideas for a later version
 ```
 
 ### Key places to look

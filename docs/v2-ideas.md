@@ -1,6 +1,6 @@
 # v2 ideas
 
-Ideas that came up while building v1 and were deliberately left out. None of them are scheduled yet.
+Ideas that came up while building v1 and were deliberately left out. None of them are scheduled yet. For things ruled out entirely, and v1's trade-offs, see `docs/decisions.md`.
 
 ## Guided tour
 

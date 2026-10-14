@@ -1,4 +1,4 @@
-# Guided tour script (draft, under review)
+# Guided tour script (approved)
 
 One linear tour. Playground controls are locked except the one the current
 frame asks the user to use, and that control gets attention-drawing styling.
@@ -7,9 +7,8 @@ frames. Task frames advance on their own once the user does the task.
 
 All numbers below were checked against the simulation engine.
 
-Open question: the Models list (without the deploy form, other buttons locked)
-shows under the lesson panel for the whole tour, because Frame 13 needs its
-Upgrade button. Revisit whether it should only appear for some frames.
+Decided: the Models list (without the deploy form, other buttons locked)
+shows under the lesson panel for the whole tour.
 
 Status legend: ⬜ draft · ✅ approved · ✏️ edited
 
@@ -73,7 +72,7 @@ Status legend: ⬜ draft · ✅ approved · ✏️ edited
 - **Text:**
   > Let's see it happen. Click **Take down** on node-2 to simulate a crash.
 
-### Frame 7 — The damage ✅ (revisit after seeing it live)
+### Frame 7 — The damage ✅
 - **App does:** nothing new. The displaced instances move to the waiting area, then get re-placed. Binpack puts code-assist, vision and summarizer on node-3 (now 4 models) and the two embeddings instances on node-4.
 - **Highlight:** the waiting area while instances pass through it, then node-3.
 - **User:** Next, once everything is placed again.
