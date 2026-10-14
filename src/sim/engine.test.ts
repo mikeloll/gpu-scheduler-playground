@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { initialState, reducer, step } from './engine';
 import { clusterMetrics, modelStatus } from './selectors';
-import type { Action, SimState } from './types';
+import { NODE_COUNT, type Action, type SimState } from './types';
 
 function run(state: SimState, ...actions: Action[]): SimState {
   let s = state;
@@ -50,7 +50,7 @@ describe('node failure', () => {
 
   it('leaves instances waiting when nothing fits, and places them when a node returns', () => {
     let s = initialState('binpack');
-    for (let n = 2; n <= 6; n++) s = run(s, { type: 'setNodeUp', nodeId: `node-${n}`, up: false });
+    for (let n = 2; n <= NODE_COUNT; n++) s = run(s, { type: 'setNodeUp', nodeId: `node-${n}`, up: false });
     s = run(s, { type: 'deploy', name: 'big', gpus: 8, replicas: 1 });
     s = run(s, { type: 'setNodeUp', nodeId: 'node-1', up: false });
     expect(clusterMetrics(s).waiting).toBe(1);
@@ -69,8 +69,8 @@ describe('upgrade', () => {
 
   it('stalls on a fragmented cluster even though plenty of GPUs are free', () => {
     let s = run(initialState('spread'), { type: 'deploy', name: 'big', gpus: 4, replicas: 1 });
-    s = run(s, { type: 'deploy', name: 'small', gpus: 1, replicas: 26 });
-    expect(clusterMetrics(s).free).toBe(18);
+    s = run(s, { type: 'deploy', name: 'small', gpus: 1, replicas: NODE_COUNT * 5 - 4 });
+    expect(clusterMetrics(s).free).toBe(NODE_COUNT * 3);
     expect(clusterMetrics(s).largestFit).toBe(3);
 
     s = run(s, { type: 'upgrade', modelId: 'm1' });

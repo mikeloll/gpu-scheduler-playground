@@ -7,13 +7,13 @@ import { Cluster } from './components/Cluster';
 import { ModelPanel } from './components/ModelPanel';
 import { EventLog } from './components/EventLog';
 
-/** Speed slider 0-100 → milliseconds between simulation steps (slow → fast). */
-const tickInterval = (speed: number) => Math.round(1600 * Math.pow(0.12, speed / 100));
+/** Speed slider 0-100 → milliseconds between simulation steps: 10s (slowest) to 0.2s (fastest). */
+const tickInterval = (speed: number) => Math.round(10000 * Math.pow(0.02, speed / 100));
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, undefined, () => initialState('binpack'));
   const [playing, setPlaying] = useState(true);
-  const [speed, setSpeed] = useState(40);
+  const [speed, setSpeed] = useState(50); // midpoint: ~1.4s per step
   const interval = tickInterval(speed);
 
   useEffect(() => {

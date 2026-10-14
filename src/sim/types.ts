@@ -1,5 +1,5 @@
 export const GPUS_PER_NODE = 8;
-export const NODE_COUNT = 6;
+export const NODE_COUNT = 8;
 
 export type Strategy = 'binpack' | 'spread';
 

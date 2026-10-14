@@ -115,7 +115,7 @@ function InstanceBlock({
       title={label}
     >
       <span className="instance-name">{model.name}</span>
-      {model.version > 1 && <span className="instance-version">v{inst.version}</span>}
+      <span className="instance-version">v{inst.version}</span>
     </motion.div>
   );
 }

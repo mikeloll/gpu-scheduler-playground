@@ -20,7 +20,10 @@ interface Props {
 export function ModelPanel({ state, dispatch }: Props) {
   return (
     <section className="panel" aria-label="Models">
-      <h2>Models</h2>
+      <div className="section-head">
+        <h2>Models</h2>
+        <span className="hint">Pick a predefined model or create your own.</span>
+      </div>
       <DeployForm dispatch={dispatch} />
       {state.models.length === 0 ? (
         <p className="empty">No models yet. Deploy one above.</p>
