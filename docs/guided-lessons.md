@@ -24,6 +24,4 @@ Vocabulary: models, instances, nodes, GPUs. No Kubernetes terms.
      v1's GPUs are never freed for v2 to use. Make this explicit; people
      often assume the old instance goes first.
 
-Ideas for later:
-- Side-by-side binpack vs spread running the same script.
-- v2: anti-affinity (don't put two instances of the same model on one node).
+Ideas for later versions are in `docs/v2-ideas.md`.
