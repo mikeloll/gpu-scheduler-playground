@@ -1,8 +1,13 @@
 import { expect, type Page } from '@playwright/test';
 
-/** Open the app with the simulation running at full speed so tests stay quick. */
-export async function openApp(page: Page) {
+/** Open the app (dismissing the welcome dialog) with the simulation at full speed so tests stay quick. */
+export async function openApp(page: Page, start: 'playground' | 'tour' = 'playground') {
   await page.goto('./');
+  const welcome = page.getByRole('dialog', { name: 'Welcome to the GPU Scheduler Playground' });
+  await welcome
+    .getByRole('button', { name: start === 'tour' ? /Start the guided tour/ : /Explore the playground/ })
+    .click();
+  await expect(welcome).toBeHidden();
   await page.getByRole('slider', { name: 'Simulation speed' }).fill('100');
 }
 

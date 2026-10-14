@@ -10,8 +10,7 @@ async function next(page: Page, expectTitle: string) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await openApp(page);
-  await page.getByRole('tab', { name: 'Guided tour' }).click();
+  await openApp(page, 'tour');
 });
 
 test('walks the whole tour, including the three hands-on steps', async ({ page }) => {

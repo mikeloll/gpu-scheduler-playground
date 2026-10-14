@@ -7,6 +7,7 @@ import { Metrics } from './components/Metrics';
 import { Cluster } from './components/Cluster';
 import { ModelPanel } from './components/ModelPanel';
 import { EventLog } from './components/EventLog';
+import { WelcomeDialog } from './components/WelcomeDialog';
 import { FRAMES } from './tour/frames';
 import { activeTarget, startTour, tourReducer } from './tour/tour';
 import { TourPanel } from './tour/TourPanel';
@@ -32,6 +33,7 @@ const PLAYGROUND_UI: TourUi = { active: false, highlights: new Set(), target: nu
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('playground');
+  const [showWelcome, setShowWelcome] = useState(true);
   const [playground, playgroundDispatch] = useReducer(playgroundReducer, undefined, () => starterState('binpack'));
   const [tour, tourDispatch] = useReducer(tourReducer, undefined, startTour);
   const [playing, setPlaying] = useState(true);
@@ -80,6 +82,14 @@ export default function App() {
   return (
     <MotionConfig transition={{ duration, ease: 'easeInOut' }}>
       <TourUiContext.Provider value={tourUi}>
+        {showWelcome && (
+          <WelcomeDialog
+            onChoose={(m) => {
+              setShowWelcome(false);
+              selectMode(m);
+            }}
+          />
+        )}
         <div className="app">
           <header className="app-header">
             <h1>GPU Scheduler Playground</h1>

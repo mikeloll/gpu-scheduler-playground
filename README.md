@@ -11,7 +11,7 @@ You get an 8-node cluster (8 GPUs per node) with a few models already running. Y
 - **Fragmentation:** spread limits blast radius but scatters free GPUs, so a large model may not fit anywhere even when plenty of GPUs are free.
 - **Stalled upgrades:** an upgrade starts the new instance *before* retiring the old one. On a fragmented cluster the new instance has nowhere to go, so the upgrade sits stuck.
 
-There are two modes, switched with the tabs under the title:
+When the app loads, a welcome dialog explains what it's for and offers both modes. After that, switch with the tabs under the title:
 
 - **Playground:** free-form. Starts with a few models running; deploy, scale, upgrade, and take nodes down as you like.
 - **Guided tour:** a 15-step walkthrough of the ideas above. Some steps are narrated (click Next); in others the user does the step themselves (take a node down, switch strategy, start an upgrade) while every other control is locked.
