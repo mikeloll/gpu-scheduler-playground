@@ -125,7 +125,7 @@ function ModelItem({ model, state, dispatch }: { model: Model } & Props) {
   }
 
   return (
-    <li className={`model ${status.kind}`}>
+    <li className={`model ${status.kind}`} aria-label={model.name}>
       <div className="model-top">
         <span className="swatch" style={{ background: modelColor(model.color) }} />
         <span className="model-name">{model.name}</span>

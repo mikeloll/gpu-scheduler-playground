@@ -89,3 +89,40 @@ describe('scaling', () => {
     expect(s.instances).toHaveLength(2);
   });
 });
+
+describe('event log', () => {
+  it('can be cleared without touching the cluster', () => {
+    let s = run(initialState(), { type: 'deploy', name: 'a', gpus: 1, replicas: 2 });
+    s = reducer(s, { type: 'clearLog' });
+    expect(s.log).toEqual([]);
+    expect(s.instances).toHaveLength(2);
+  });
+});
+
+describe('model colors', () => {
+  it('reuses a deleted model’s color instead of duplicating one in use', () => {
+    let s = run(
+      initialState(),
+      { type: 'deploy', name: 'a', gpus: 1, replicas: 1 },
+      { type: 'deploy', name: 'b', gpus: 1, replicas: 1 },
+      { type: 'delete', modelId: 'm1' },
+      { type: 'deploy', name: 'c', gpus: 1, replicas: 1 },
+    );
+    const colors = s.models.map((m) => m.color);
+    expect(new Set(colors).size).toBe(colors.length);
+  });
+});
+
+describe('reset', () => {
+  it('clears models and brings every node back but keeps the strategy', () => {
+    let s = run(
+      initialState('spread'),
+      { type: 'deploy', name: 'a', gpus: 2, replicas: 3 },
+      { type: 'setNodeUp', nodeId: 'node-2', up: false },
+      { type: 'reset' },
+    );
+    expect(s.models).toEqual([]);
+    expect(s.nodes.every((n) => n.up)).toBe(true);
+    expect(s.strategy).toBe('spread');
+  });
+});

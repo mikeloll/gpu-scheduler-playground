@@ -5,4 +5,5 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: '/gpu-scheduler-playground/',
   plugins: [react()],
+  test: { include: ['src/**/*.test.ts'] },
 });

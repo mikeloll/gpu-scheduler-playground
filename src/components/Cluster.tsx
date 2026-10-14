@@ -22,7 +22,7 @@ export function Cluster({ state, dispatch }: Props) {
         ))}
       </div>
 
-      <div className="waiting">
+      <div className="waiting" role="region" aria-label="Waiting for a node">
         <div className="section-head">
           <h3>Waiting for a node</h3>
           <span className="hint">
@@ -53,7 +53,7 @@ function NodeRow({ node, state, dispatch }: { node: ClusterNode } & Props) {
   const here = state.instances.filter((i) => i.nodeId === node.id);
   const used = usedGpus(state, node.id);
   return (
-    <div className={`node ${node.up ? '' : 'down'}`}>
+    <div className={`node ${node.up ? '' : 'down'}`} role="group" aria-label={node.name}>
       <div className="node-head">
         <span className="node-name">{node.name}</span>
         <span className="node-usage">{node.up ? `${used}/${GPUS_PER_NODE} GPUs used` : 'Down'}</span>
